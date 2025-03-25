@@ -344,10 +344,10 @@
                 synth = new Tone.Synth({
                     oscillator: { type: 'sine' },
                     envelope: {
-                        attack: 0.5,  // Πιο ομαλή έναρξη
+                        attack: 0.5,
                         decay: 0.3,
                         sustain: 0.8,
-                        release: 1.0  // Πιο απαλή λήξη
+                        release: 1.0
                     }
                 }).toDestination();
 
@@ -367,114 +367,182 @@
             }).catch(err => console.error("Error initializing audio:", err));
         }
 
-        // Αναπαραγωγή Solfeggio συχνότητας
+        // Αναπαραγωγή Solfeggio συχνότητας με συγχορδίες
         function playFrequency(frequency, waveType = 'sine') {
             stopFrequency();
-            if (!synth) {
+            if (!polySynth) {
                 initAudio().then(() => {
-                    synth.oscillator.type = waveType;
-                    synth.triggerAttack(frequency);
+                    polySynth.oscillator.type = waveType;
+                    const chord = [frequency, frequency * 1.25, frequency * 1.5]; // 1, 3, 5
+                    polySynth.triggerAttack(chord);
+                    intervalId = setInterval(() => {
+                        if (polySynth) {
+                            polySynth.triggerRelease(chord);
+                            const newChord = [frequency, frequency * 1.2, frequency * 1.4];
+                            polySynth.triggerAttack(newChord);
+                            setTimeout(() => polySynth.triggerRelease(newChord), 500);
+                        }
+                    }, 2000);
                     visualizeWave(frequency);
                 });
             } else {
-                synth.oscillator.type = waveType;
-                synth.triggerAttack(frequency);
+                polySynth.oscillator.type = waveType;
+                const chord = [frequency, frequency * 1.25, frequency * 1.5];
+                polySynth.triggerAttack(chord);
+                intervalId = setInterval(() => {
+                    if (polySynth) {
+                        polySynth.triggerRelease(chord);
+                        const newChord = [frequency, frequency * 1.2, frequency * 1.4];
+                        polySynth.triggerAttack(newChord);
+                        setTimeout(() => polySynth.triggerRelease(newChord), 500);
+                    }
+                }, 2000);
                 visualizeWave(frequency);
             }
         }
 
-        // Αναπαραγωγή Κρυστάλλινων Κυμάτων
+        // Αναπαραγωγή Κρυστάλλινων Κυμάτων με ποικιλία
         function playCrystalWaves() {
             stopFrequency();
             if (!polySynth) {
                 initAudio().then(() => {
-                    polySynth.triggerAttackRelease(["C4", "E4", "G4"], "8n", "+0.1", 0.3);
+                    const chords = [
+                        ["C4", "E4", "G4"],
+                        ["D4", "F4", "A4"],
+                        ["E4", "G4", "B4"]
+                    ];
+                    let index = 0;
+                    polySynth.triggerAttackRelease(chords[index], "8n", "+0.1", 0.3);
                     intervalId = setInterval(() => {
-                        if (polySynth) polySynth.triggerAttackRelease(["C4", "E4", "G4"], "8n", "+0.1", 0.3);
-                    }, 1000);
+                        if (polySynth) {
+                            index = (index + 1) % chords.length;
+                            polySynth.triggerAttackRelease(chords[index], "8n", "+0.1", 0.3);
+                        }
+                    }, 800);
                     visualizeWave(261.63); // C4
                 });
             } else {
-                polySynth.triggerAttackRelease(["C4", "E4", "G4"], "8n", "+0.1", 0.3);
+                const chords = [
+                    ["C4", "E4", "G4"],
+                    ["D4", "F4", "A4"],
+                    ["E4", "G4", "B4"]
+                ];
+                let index = 0;
+                polySynth.triggerAttackRelease(chords[index], "8n", "+0.1", 0.3);
                 intervalId = setInterval(() => {
-                    if (polySynth) polySynth.triggerAttackRelease(["C4", "E4", "G4"], "8n", "+0.1", 0.3);
-                }, 1000);
+                    if (polySynth) {
+                        index = (index + 1) % chords.length;
+                        polySynth.triggerAttackRelease(chords[index], "8n", "+0.1", 0.3);
+                    }
+                }, 800);
                 visualizeWave(261.63);
             }
         }
 
-        // Αναπαραγωγή Ήπιου Πιάνου
+        // Αναπαραγωγή Ήπιου Πιάνου με συγχορδίες
         function playSoftPiano() {
             stopFrequency();
             if (!polySynth) {
                 initAudio().then(() => {
-                    const pattern = ["G3", "B3", "D4", "G4"];
+                    const chords = [
+                        ["G3", "B3", "D4"],
+                        ["A3", "C4", "E4"],
+                        ["F3", "A3", "C4"]
+                    ];
                     let index = 0;
-                    polySynth.triggerAttackRelease(pattern[index], "4n", "+0.1", 0.4);
+                    polySynth.triggerAttackRelease(chords[index], "2n", "+0.1", 0.4);
                     intervalId = setInterval(() => {
                         if (polySynth) {
-                            index = (index + 1) % pattern.length;
-                            polySynth.triggerAttackRelease(pattern[index], "4n", "+0.1", 0.4);
+                            index = (index + 1) % chords.length;
+                            polySynth.triggerAttackRelease(chords[index], "2n", "+0.1", 0.4);
                         }
-                    }, 500);
+                    }, 1000);
                     visualizeWave(196); // G3
                 });
             } else {
-                const pattern = ["G3", "B3", "D4", "G4"];
+                const chords = [
+                    ["G3", "B3", "D4"],
+                    ["A3", "C4", "E4"],
+                    ["F3", "A3", "C4"]
+                ];
                 let index = 0;
-                polySynth.triggerAttackRelease(pattern[index], "4n", "+0.1", 0.4);
+                polySynth.triggerAttackRelease(chords[index], "2n", "+0.1", 0.4);
                 intervalId = setInterval(() => {
                     if (polySynth) {
-                        index = (index + 1) % pattern.length;
-                        polySynth.triggerAttackRelease(pattern[index], "4n", "+0.1", 0.4);
+                        index = (index + 1) % chords.length;
+                        polySynth.triggerAttackRelease(chords[index], "2n", "+0.1", 0.4);
                     }
-                }, 500);
+                }, 1000);
                 visualizeWave(196);
             }
         }
 
-        // Αναπαραγωγή Ρυακιού
+        // Αναπαραγωγή Ρυακιού με ποικιλία
         function playNatureStream() {
             stopFrequency();
-            if (!synth) {
+            if (!polySynth) {
                 initAudio().then(() => {
-                    synth.oscillator.type = 'sine';
-                    synth.triggerAttack(110); // Χαμηλή συχνότητα σαν νερό
-                    visualizeWave(110);
+                    const baseFreq = 110;
+                    polySynth.triggerAttack([baseFreq, baseFreq * 1.1, baseFreq * 1.3]);
+                    intervalId = setInterval(() => {
+                        if (polySynth) {
+                            polySynth.triggerRelease([baseFreq, baseFreq * 1.1, baseFreq * 1.3]);
+                            const newFreqs = [baseFreq * 1.05, baseFreq * 1.15, baseFreq * 1.25];
+                            polySynth.triggerAttack(newFreqs);
+                            setTimeout(() => polySynth.triggerRelease(newFreqs), 1500);
+                        }
+                    }, 3000);
+                    visualizeWave(baseFreq);
                 });
             } else {
-                synth.oscillator.type = 'sine';
-                synth.triggerAttack(110);
-                visualizeWave(110);
+                const baseFreq = 110;
+                polySynth.triggerAttack([baseFreq, baseFreq * 1.1, baseFreq * 1.3]);
+                intervalId = setInterval(() => {
+                    if (polySynth) {
+                        polySynth.triggerRelease([baseFreq, baseFreq * 1.1, baseFreq * 1.3]);
+                        const newFreqs = [baseFreq * 1.05, baseFreq * 1.15, baseFreq * 1.25];
+                        polySynth.triggerAttack(newFreqs);
+                        setTimeout(() => polySynth.triggerRelease(newFreqs), 1500);
+                    }
+                }, 3000);
+                visualizeWave(baseFreq);
             }
         }
 
-        // Αναπαραγωγή Κελαηδίσματος Πουλιών
+        // Αναπαραγωγή Κελαηδίσματος Πουλιών με ποικιλία
         function playBirdsong() {
             stopFrequency();
             if (!polySynth) {
                 initAudio().then(() => {
-                    const notes = ["A4", "C5", "E5"];
+                    const patterns = [
+                        ["A4", "C5", "E5"],
+                        ["B4", "D5", "F5"],
+                        ["G4", "B4", "D5"]
+                    ];
                     let index = 0;
-                    polySynth.triggerAttackRelease(notes[index], "16n", "+0.1", 0.5);
+                    polySynth.triggerAttackRelease(patterns[index], "16n", "+0.1", 0.5);
                     intervalId = setInterval(() => {
                         if (polySynth) {
-                            index = (index + 1) % notes.length;
-                            polySynth.triggerAttackRelease(notes[index], "16n", "+0.1", 0.5);
+                            index = (index + 1) % patterns.length;
+                            polySynth.triggerAttackRelease(patterns[index], "16n", "+0.1", 0.5);
                         }
-                    }, 300);
+                    }, 400);
                     visualizeWave(440); // A4
                 });
             } else {
-                const notes = ["A4", "C5", "E5"];
+                const patterns = [
+                    ["A4", "C5", "E5"],
+                    ["B4", "D5", "F5"],
+                    ["G4", "B4", "D5"]
+                ];
                 let index = 0;
-                polySynth.triggerAttackRelease(notes[index], "16n", "+0.1", 0.5);
+                polySynth.triggerAttackRelease(patterns[index], "16n", "+0.1", 0.5);
                 intervalId = setInterval(() => {
                     if (polySynth) {
-                        index = (index + 1) % notes.length;
-                        polySynth.triggerAttackRelease(notes[index], "16n", "+0.1", 0.5);
+                        index = (index + 1) % patterns.length;
+                        polySynth.triggerAttackRelease(patterns[index], "16n", "+0.1", 0.5);
                     }
-                }, 300);
+                }, 400);
                 visualizeWave(440);
             }
         }
