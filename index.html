@@ -63,6 +63,7 @@
             height: 150px;
             background-color: #e0e0e0;
             margin-top: 15px;
+            display: block;
         }
 
         h1 {
@@ -77,42 +78,6 @@
             font-size: 1.2em;
             border-bottom: 2px solid #3498db;
             padding-bottom: 5px;
-        }
-
-        #add-frequency-section {
-            background-color: white;
-            border-radius: 10px;
-            padding: 15px;
-            margin-top: 15px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        input, select {
-            width: 100%;
-            padding: 8px;
-            margin: 8px 0;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            box-sizing: border-box;
-            font-size: 14px;
-        }
-
-        #custom-frequencies {
-            margin-top: 15px;
-        }
-
-        .custom-frequency-item {
-            background-color: #f1f1f1;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            font-size: 0.9em;
-        }
-
-        .delete-frequency {
-            background-color: #ff4d4d;
-            padding: 5px 10px;
-            margin-left: 10px;
         }
 
         @media (max-width: 600px) {
@@ -139,58 +104,209 @@
     </style>
 </head>
 <body>
-    <!-- Ο HTML κώδικας παραμένει ίδιος -->
+    <h1>Προηγμένη Εφαρμογή Θεραπευτικών Συχνοτήτων</h1>
+
+    <div class="frequency-section">
+        <h2>Ανακούφιση Πόνου (174 Hz)</h2>
+        <div class="frequency-controls">
+            <button onclick="playFrequency(174, 'sine')">Έναρξη</button>
+            <button onclick="stopFrequency()">Διακοπή</button>
+        </div>
+        <div class="frequency-info">
+            <p>Η συχνότητα 174 Hz προσφέρει:</p>
+            <ul>
+                <li>Ανακούφιση από σωματικό και συναισθηματικό πόνο</li>
+                <li>Ενίσχυση αίσθησης ασφάλειας</li>
+                <li>Βαθιά χαλάρωση</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="frequency-section">
+        <h2>Ενεργειακή Επούλωση (285 Hz)</h2>
+        <div class="frequency-controls">
+            <button onclick="playFrequency(285, 'triangle')">Έναρξη</button>
+            <button onclick="stopFrequency()">Διακοπή</button>
+        </div>
+        <div class="frequency-info">
+            <p>Η συχνότητα 285 Hz βοηθά:</p>
+            <ul>
+                <li>Στην αναγέννηση ιστών</li>
+                <li>Ενίσχυση ενεργειακού πεδίου</li>
+                <li>Ενδυνάμωση ανοσοποιητικού</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="frequency-section">
+        <h2>Σωματική Αποκατάσταση (417 Hz)</h2>
+        <div class="frequency-controls">
+            <button onclick="playFrequency(417, 'sine')">Έναρξη</button>
+            <button onclick="stopFrequency()">Διακοπή</button>
+        </div>
+        <div class="frequency-info">
+            <p>Η συχνότητα 417 Hz συνδέεται με:</p>
+            <ul>
+                <li>Άρση αρνητικών καταστάσεων</li>
+                <li>Κάθαρση από αρνητικές επιρροές</li>
+                <li>Διευκόλυνση θεραπείας</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="frequency-section">
+        <h2>Διαλογισμός & Ηρεμία (432 Hz)</h2>
+        <div class="frequency-controls">
+            <button onclick="playFrequency(432, 'triangle')">Έναρξη</button>
+            <button onclick="stopFrequency()">Διακοπή</button>
+        </div>
+        <div class="frequency-info">
+            <p>Η συχνότητα 432 Hz προσφέρει:</p>
+            <ul>
+                <li>Βαθύ διαλογισμό</li>
+                <li>Αίσθηση ηρεμίας</li>
+                <li>Σύνδεση με τη φύση</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="frequency-section">
+        <h2>Θεραπεία & Αγάπη (528 Hz)</div>
+        <div class="frequency-controls">
+            <button onclick="playFrequency(528, 'square')">Έναρξη</button>
+            <button onclick="stopFrequency()">Διακοπή</button>
+        </div>
+        <div class="frequency-info">
+            <p>Η συχνότητα 528 Hz, η "συχνότητα της αγάπης":</p>
+            <ul>
+                <li>Επουλώνει το DNA</li>
+                <li>Προάγει θετική μεταμόρφωση</li>
+                <li>Αυξάνει την ευεξία</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="frequency-section">
+        <h2>Σχέσεις & Ισορροπία (639 Hz)</h2>
+        <div class="frequency-controls">
+            <button onclick="playFrequency(639, 'sawtooth')">Έναρξη</button>
+            <button onclick="stopFrequency()">Διακοπή</button>
+        </div>
+        <div class="frequency-info">
+            <p>Η συχνότητα 639 Hz βοηθά:</p>
+            <ul>
+                <li>Στην καλύτερη επικοινωνία</li>
+                <li>Ενίσχυση σχέσεων</li>
+                <li>Συναισθηματική ισορροπία</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="frequency-section">
+        <h2>Διαίσθηση & Καθαρισμός (741 Hz)</h2>
+        <div class="frequency-controls">
+            <button onclick="playFrequency(741, 'sine')">Έναρξη</button>
+            <button onclick="stopFrequency()">Διακοπή</button>
+        </div>
+        <div class="frequency-info">
+            <p>Η συχνότητα 741 Hz προσφέρει:</p>
+            <ul>
+                <li>Ενίσχυση διαίσθησης</li>
+                <li>Καθαρισμό από τοξίνες</li>
+                <li>Βελτίωση επίλυσης προβλημάτων</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="frequency-section">
+        <h2>Πνευματική Επανασύνδεση (852 Hz)</h2>
+        <div class="frequency-controls">
+            <button onclick="playFrequency(852, 'triangle')">Έναρξη</button>
+            <button onclick="stopFrequency()">Διακοπή</button>
+        </div>
+        <div class="frequency-info">
+            <p>Η συχνότητα 852 Hz βοηθά:</p>
+            <ul>
+                <li>Στην πνευματική σύνδεση</li>
+                <li>Επαναφορά εσωτερικής ισορροπίας</li>
+                <li>Αύξηση συνειδητότητας</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="frequency-section">
+        <h2>Ανώτερη Συνειδητότητα (963 Hz)</h2>
+        <div class="frequency-controls">
+            <button onclick="playFrequency(963, 'square')">Έναρξη</button>
+            <button onclick="stopFrequency()">Διακοπή</button>
+        </div>
+        <div class="frequency-info">
+            <p>Η συχνότητα 963 Hz συνδέεται με:</p>
+            <ul>
+                <li>Αφύπνιση ανώτερης συνείδησης</li>
+                <li>Ενεργοποίηση ενδοκρινών αδένων</li>
+                <li>Σύνδεση με το θείο</li>
+            </ul>
+        </div>
+    </div>
+
+    <canvas id="waveform"></canvas>
 
     <script>
         let synth = null;
-        const synthOptions = {
-            oscillator: {
-                type: 'sine'
-            },
-            envelope: {
-                attack: 0.1,
-                decay: 0.2,
-                sustain: 1,
-                release: 0.5
-            }
-        };
 
+        // Αρχικοποίηση ήχου
         function initAudio() {
-            Tone.start();
-            synth = new Tone.Synth(synthOptions).toDestination();
-            synth.volume.value = -10; // Μειώνει την ένταση για πιο ευχάριστο ήχο
+            return Tone.start().then(() => {
+                synth = new Tone.Synth({
+                    oscillator: { type: 'sine' },
+                    envelope: {
+                        attack: 0.1,
+                        decay: 0.2,
+                        sustain: 1,
+                        release: 0.5
+                    }
+                }).toDestination();
+                synth.volume.value = -10; // Απαλός ήχος
+            }).catch(err => console.error("Error initializing audio:", err));
         }
 
+        // Αναπαραγωγή συχνότητας
         function playFrequency(frequency, waveType = 'sine') {
             if (synth) {
                 stopFrequency();
             }
 
             if (!synth) {
-                initAudio();
+                initAudio().then(() => {
+                    synth.oscillator.type = waveType;
+                    synth.triggerAttack(frequency);
+                    visualizeWave(frequency);
+                });
+            } else {
+                synth.oscillator.type = waveType;
+                synth.triggerAttack(frequency);
+                visualizeWave(frequency);
             }
-
-            synth.oscillator.type = waveType;
-            synth.triggerAttack(frequency);
-            visualizeWave(frequency);
         }
 
+        // Διακοπή ήχου
         function stopFrequency() {
             if (synth) {
                 synth.triggerRelease();
                 synth.dispose();
                 synth = null;
+                clearWaveform();
             }
-            clearWaveform();
         }
 
-        function visualizeWave() {
+        // Οπτικοποίηση κύματος
+        function visualizeWave(frequency) {
             const canvas = document.getElementById('waveform');
             const ctx = canvas.getContext('2d');
             canvas.width = canvas.offsetWidth;
             canvas.height = canvas.offsetHeight;
 
-            let animationFrame;
             let phase = 0;
 
             function draw() {
@@ -203,23 +319,19 @@
 
                 for (let x = 0; x < canvas.width; x++) {
                     const y = Math.sin(x * 0.05 + phase) * (canvas.height / 4) + canvas.height / 2;
-                    if (x === 0) {
-                        ctx.moveTo(x, y);
-                    } else {
-                        ctx.lineTo(x, y);
-                    }
+                    if (x === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
                 }
 
                 ctx.stroke();
                 phase += 0.1;
-                animationFrame = requestAnimationFrame(draw);
+                if (synth) requestAnimationFrame(draw);
             }
 
             draw();
-
-            return () => cancelAnimationFrame(animationFrame);
         }
 
+        // Καθαρισμός κυματομορφής
         function clearWaveform() {
             const canvas = document.getElementById('waveform');
             const ctx = canvas.getContext('2d');
@@ -227,28 +339,13 @@
             ctx.fillRect(0, 0, canvas.width, canvas.height);
         }
 
-        // Υπόλοιπος κώδικας παραμένει ίδιος με τις υπάρχουσες λειτουργίες
-        document.getElementById('custom-frequency-form').addEventListener('submit', function(e) {
-            // Ίδια λογική
+        // Ενεργοποίηση ήχου με κλικ (απαραίτητο για κινητά)
+        document.addEventListener('click', function startAudioContext() {
+            if (!synth) {
+                initAudio();
+            }
+            document.removeEventListener('click', startAudioContext);
         });
-
-        function updateCustomFrequenciesList() {
-            // Ίδια λογική
-        }
-
-        function deleteCustomFrequency(index) {
-            // Ίδια λογική
-        }
-
-        function getWaveTypeTranslation(waveType) {
-            // Ίδια λογική
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            // Ίδια λογική
-        });
-
-        window.addEventListener('beforeunload', saveCustomFrequencies);
     </script>
 </body>
 </html>
