@@ -1,65 +1,588 @@
 <!DOCTYPE html>
+
 <html lang="el">
 <head>
-  <meta charset="UTF-8">
-  <title>Χρονόμετρο Γύρου</title>
-  <style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Άσκηση Αναπνοής</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+```
     body {
-      font-family: sans-serif;
-      text-align: center;
-      background-color: #222;
-      color: white;
-      padding-top: 50px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
     }
-    input, button {
-      font-size: 1.2em;
-      padding: 10px;
-      margin: 10px;
+
+    .container {
+        text-align: center;
+        padding: 20px;
+        max-width: 600px;
+        width: 100%;
     }
-    #timer {
-      font-size: 4em;
-      margin-top: 30px;
+
+    h1 {
+        margin-bottom: 30px;
+        font-size: 2.5em;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
     }
-  </style>
+
+    .settings {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    }
+
+    .input-group {
+        margin-bottom: 20px;
+        text-align: left;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        font-size: 1.1em;
+    }
+
+    input {
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 10px;
+        font-size: 1.1em;
+        background: rgba(255, 255, 255, 0.9);
+        color: #333;
+    }
+
+    input:focus {
+        outline: 3px solid rgba(255, 255, 255, 0.5);
+    }
+
+    .buttons {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        margin-top: 25px;
+    }
+
+    button {
+        padding: 15px 40px;
+        font-size: 1.2em;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .start-btn {
+        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+    }
+
+    .start-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    }
+
+    .stop-btn {
+        background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+        color: white;
+        display: none;
+    }
+
+    .stop-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    }
+
+    .breathing-circle {
+        display: none;
+        margin: 40px auto;
+    }
+
+    .circle {
+        width: 250px;
+        height: 250px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 100%);
+        margin: 0 auto;
+        transition: transform 1s ease-in-out;
+        box-shadow: 0 0 50px rgba(255,255,255,0.3);
+    }
+
+    .phase-text {
+        font-size: 2em;
+        margin-top: 30px;
+        font-weight: 600;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .timer-text {
+        font-size: 3em;
+        margin-top: 15px;
+        font-weight: 300;
+    }
+
+    .cycle-counter {
+        font-size: 1.3em;
+        margin-top: 20px;
+        opacity: 0.9;
+    }
+
+    @keyframes breatheIn {
+        to {
+            transform: scale(1.5);
+        }
+    }
+
+    @keyframes breatheOut {
+        to {
+            transform: scale(0.7);
+        }
+    }
+</style>
+```
+
 </head>
 <body>
-  <h1>Χρονόμετρο Γύρου</h1>
-  <label>Δευτερόλεπτα ανά γύρο:</label>
-  <input type="number" id="roundDuration" min="1" value="30">
-  <br>
-  <button onclick="startTimer()">Ξεκίνα</button>
+    <div class="container">
+        <h1>🌬️ Άσκηση Αναπνοής</h1>
 
-  <div id="timer">00:00</div>
+```
+    <div class="settings" id="settings">
+        <div class="input-group">
+            <label for="inhale">Εισπνοή (δευτερόλεπτα):</label>
+            <input type="number" id="inhale" value="4" min="1" max="20">
+        </div>
+        
+        <div class="input-group">
+            <label for="hold1">Κράτημα μετά την εισπνοή (δευτερόλεπτα):</label>
+            <input type="number" id="hold1" value="4" min="0" max="20">
+        </div>
+        
+        <div class="input-group">
+            <label for="exhale">Εκπνοή (δευτερόλεπτα):</label>
+            <input type="number" id="exhale" value="6" min="1" max="20">
+        </div>
+        
+        <div class="input-group">
+            <label for="hold2">Κράτημα μετά την εκπνοή (δευτερόλεπτα):</label>
+            <input type="number" id="hold2" value="2" min="0" max="20">
+        </div>
+        
+        <div class="buttons">
+            <button class="start-btn" onclick="startBreathing()">Έναρξη</button>
+        </div>
+    </div>
 
-  <audio id="beep" src="https://www.soundjay.com/button/beep-07.wav" preload="auto"></audio>
+    <div class="breathing-circle" id="breathingCircle">
+        <div class="circle" id="circle"></div>
+        <div class="phase-text" id="phaseText">Προετοιμασία...</div>
+        <div class="timer-text" id="timerText">0</div>
+        <div class="cycle-counter" id="cycleCounter">Κύκλος: 1</div>
+        <div class="buttons">
+            <button class="stop-btn" onclick="stopBreathing()" style="display: inline-block;">Διακοπή</button>
+        </div>
+    </div>
+</div>
 
-  <script>
-    let countdown;
-    function startTimer() {
-      const seconds = parseInt(document.getElementById('roundDuration').value);
-      if (isNaN(seconds) || seconds < 1) return;
+<script>
+    let audioContext;
+    let pinkNoiseNode;
+    let mainGainNode;
+    let oscillatorLFO;
+    let filterNode;
+    let lfoGainNode;
+    let isPlaying = false;
+    let currentPhase = 0;
+    let timer;
+    let cycleCount = 1;
 
-      clearInterval(countdown);
-      let timeLeft = seconds;
-      const timerDisplay = document.getElementById('timer');
-      const beep = document.getElementById('beep');
-
-      function updateDisplay() {
-        const min = String(Math.floor(timeLeft / 60)).padStart(2, '0');
-        const sec = String(timeLeft % 60).padStart(2, '0');
-        timerDisplay.textContent = `${min}:${sec}`;
-      }
-
-      updateDisplay();
-      countdown = setInterval(() => {
-        timeLeft--;
-        updateDisplay();
-        if (timeLeft <= 0) {
-          clearInterval(countdown);
-          beep.play();
+    // Δημιουργία πιο ευχάριστου Pink Noise με φίλτρα
+    function createPinkNoise() {
+        if (!audioContext) {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
         }
-      }, 1000);
+
+        const bufferSize = 4096;
+        const pinkNoise = audioContext.createScriptProcessor(bufferSize, 1, 1);
+        
+        let b0, b1, b2, b3, b4, b5, b6;
+        b0 = b1 = b2 = b3 = b4 = b5 = b6 = 0.0;
+        
+        pinkNoise.onaudioprocess = function(e) {
+            const output = e.outputBuffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                const white = Math.random() * 2 - 1;
+                b0 = 0.99886 * b0 + white * 0.0555179;
+                b1 = 0.99332 * b1 + white * 0.0750759;
+                b2 = 0.96900 * b2 + white * 0.1538520;
+                b3 = 0.86650 * b3 + white * 0.3104856;
+                b4 = 0.55000 * b4 + white * 0.5329522;
+                b5 = -0.7616 * b5 - white * 0.0168980;
+                output[i] = b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362;
+                output[i] *= 0.08; // Πιο απαλός
+                b6 = white * 0.115926;
+            }
+        };
+
+        // Φίλτρο lowpass για πιο απαλό ήχο
+        filterNode = audioContext.createBiquadFilter();
+        filterNode.type = 'lowpass';
+        filterNode.frequency.value = 800;
+        filterNode.Q.value = 0.5;
+
+        // LFO για απαλούς κυματισμούς
+        oscillatorLFO = audioContext.createOscillator();
+        oscillatorLFO.type = 'sine';
+        oscillatorLFO.frequency.value = 0.3; // Αργός κυματισμός
+        
+        lfoGainNode = audioContext.createGain();
+        lfoGainNode.gain.value = 0.03; // Πολύ απαλή διακύμανση
+
+        // Κύριος έλεγχος έντασης
+        mainGainNode = audioContext.createGain();
+        mainGainNode.gain.value = 0;
+
+        // Σύνδεση: Pink Noise -> Filter -> Gain -> Destination
+        pinkNoise.connect(filterNode);
+        filterNode.connect(mainGainNode);
+        
+        // LFO συνδέεται στο gain για απαλούς κυματισμούς
+        oscillatorLFO.connect(lfoGainNode);
+        lfoGainNode.connect(mainGainNode.gain);
+        
+        mainGainNode.connect(audioContext.destination);
+        
+        oscillatorLFO.start();
+        
+        return { noise: pinkNoise, gain: mainGainNode };
     }
-  </script>
+
+    // ΚΥΜΑ ΕΙΣΠΝΟΗΣ - Το κύμα έρχεται ΔΥΝΑΜΙΚΑ (fade in)
+    function waveIn(duration) {
+        if (!mainGainNode) return;
+        const startTime = audioContext.currentTime;
+        
+        mainGainNode.gain.cancelScheduledValues(startTime);
+        mainGainNode.gain.setValueAtTime(0.001, startTime);
+        
+        // ΠΟΛΥ πιο έντονο fade in για να ακούγεται καθαρά
+        mainGainNode.gain.exponentialRampToValueAtTime(0.08, startTime + duration * 0.25);
+        mainGainNode.gain.exponentialRampToValueAtTime(0.18, startTime + duration * 0.6);
+        mainGainNode.gain.linearRampToValueAtTime(0.22, startTime + duration);
+        
+        // ΤΑΧΥΣ κυματισμός - εύκολα αναγνωρίσιμος
+        if (oscillatorLFO) {
+            oscillatorLFO.frequency.cancelScheduledValues(startTime);
+            oscillatorLFO.frequency.setValueAtTime(0.3, startTime);
+            oscillatorLFO.frequency.linearRampToValueAtTime(0.8, startTime + duration * 0.5); // Πιο γρήγορος!
+        }
+        
+        // Φίλτρο ανοίγει ΠΟΛΥ για φωτεινό, ψηλό ήχο
+        if (filterNode) {
+            filterNode.frequency.cancelScheduledValues(startTime);
+            filterNode.frequency.setValueAtTime(500, startTime);
+            filterNode.frequency.exponentialRampToValueAtTime(2000, startTime + duration * 0.4); // Πολύ ψηλά!
+        }
+        
+        // Υψηλό Q για έντονο χαρακτήρα
+        if (filterNode) {
+            filterNode.Q.cancelScheduledValues(startTime);
+            filterNode.Q.setValueAtTime(0.8, startTime);
+            filterNode.Q.linearRampToValueAtTime(2.0, startTime + duration * 0.3); // Πιο έντονο
+        }
+        
+        // Αύξηση βάθους LFO για πιο εμφανή κυματισμό
+        if (lfoGainNode) {
+            lfoGainNode.gain.cancelScheduledValues(startTime);
+            lfoGainNode.gain.setValueAtTime(0.03, startTime);
+            lfoGainNode.gain.linearRampToValueAtTime(0.08, startTime + duration * 0.4); // Πιο έντονα κύματα
+        }
+    }
+
+    // ΠΑΥΣΗ ΜΕΤΑ ΕΙΣΠΝΟΗ - Το κύμα φεύγει ΟΜΑΛΑ (fade out to silence)
+    function waveOutToHold(duration) {
+        if (!mainGainNode) return;
+        const startTime = audioContext.currentTime;
+        
+        mainGainNode.gain.cancelScheduledValues(startTime);
+        mainGainNode.gain.setValueAtTime(mainGainNode.gain.value, startTime);
+        
+        // Γρήγορο fade out στην αρχή, μετά πολύ απαλό
+        mainGainNode.gain.exponentialRampToValueAtTime(0.10, startTime + duration * 0.3);
+        mainGainNode.gain.exponentialRampToValueAtTime(0.025, startTime + duration * 0.6);
+        mainGainNode.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+        
+        // Επιβράδυνση LFO - ΠΟΛΥ αργά κύματα για ηρεμία
+        if (oscillatorLFO) {
+            oscillatorLFO.frequency.cancelScheduledValues(startTime);
+            oscillatorLFO.frequency.setValueAtTime(oscillatorLFO.frequency.value, startTime);
+            oscillatorLFO.frequency.linearRampToValueAtTime(0.12, startTime + duration * 0.5); // Πολύ αργά
+        }
+        
+        // Φίλτρο κλείνει - χαμηλότερος ήχος
+        if (filterNode) {
+            filterNode.frequency.cancelScheduledValues(startTime);
+            filterNode.frequency.setValueAtTime(filterNode.frequency.value, startTime);
+            filterNode.frequency.exponentialRampToValueAtTime(500, startTime + duration * 0.7);
+        }
+        
+        // Μείωση Q
+        if (filterNode) {
+            filterNode.Q.cancelScheduledValues(startTime);
+            filterNode.Q.setValueAtTime(filterNode.Q.value, startTime);
+            filterNode.Q.linearRampToValueAtTime(0.3, startTime + duration * 0.6);
+        }
+        
+        // Μείωση βάθους LFO
+        if (lfoGainNode) {
+            lfoGainNode.gain.cancelScheduledValues(startTime);
+            lfoGainNode.gain.setValueAtTime(lfoGainNode.gain.value, startTime);
+            lfoGainNode.gain.linearRampToValueAtTime(0.02, startTime + duration);
+        }
+    }
+
+    // ΚΥΜΑ ΕΚΠΝΟΗΣ - Το κύμα έρχεται με ΔΙΑΦΟΡΕΤΙΚΟ χαρακτήρα (fade in, πιο χαμηλό)
+    function waveInExhale(duration) {
+        if (!mainGainNode) return;
+        const startTime = audioContext.currentTime;
+        
+        mainGainNode.gain.cancelScheduledValues(startTime);
+        mainGainNode.gain.setValueAtTime(0.001, startTime);
+        
+        // Fade in με μεσαία ένταση - ΔΙΑΦΟΡΕΤΙΚΟ από εισπνοή
+        mainGainNode.gain.exponentialRampToValueAtTime(0.07, startTime + duration * 0.3);
+        mainGainNode.gain.exponentialRampToValueAtTime(0.15, startTime + duration * 0.65);
+        mainGainNode.gain.linearRampToValueAtTime(0.17, startTime + duration); // Λίγο πιο χαμηλά
+        
+        // ΜΕΣΑΙΟΣ κυματισμός - διαφορετικό από εισπνοή
+        if (oscillatorLFO) {
+            oscillatorLFO.frequency.cancelScheduledValues(startTime);
+            oscillatorLFO.frequency.setValueAtTime(0.35, startTime);
+            oscillatorLFO.frequency.linearRampToValueAtTime(0.6, startTime + duration * 0.6); // Πιο αργά από εισπνοή
+        }
+        
+        // Φίλτρο με ΧΑΜΗΛΟΤΕΡΕΣ συχνότητες - πιο σκούρος ήχος
+        if (filterNode) {
+            filterNode.frequency.cancelScheduledValues(startTime);
+            filterNode.frequency.setValueAtTime(400, startTime); // Πιο χαμηλά
+            filterNode.frequency.exponentialRampToValueAtTime(1100, startTime + duration * 0.5); // Δεν φτάνει τόσο ψηλά
+        }
+        
+        // Μεσαίο Q
+        if (filterNode) {
+            filterNode.Q.cancelScheduledValues(startTime);
+            filterNode.Q.setValueAtTime(0.6, startTime);
+            filterNode.Q.linearRampToValueAtTime(1.3, startTime + duration * 0.4);
+        }
+        
+        // Μεσαίο βάθος LFO
+        if (lfoGainNode) {
+            lfoGainNode.gain.cancelScheduledValues(startTime);
+            lfoGainNode.gain.setValueAtTime(0.03, startTime);
+            lfoGainNode.gain.linearRampToValueAtTime(0.06, startTime + duration * 0.4);
+        }
+    }
+
+    // ΠΑΥΣΗ ΜΕΤΑ ΕΚΠΝΟΗ - Το κύμα φεύγει ΠΟΛΥ ΑΠΑΛΑ στη σιωπή (fade out to deep silence)
+    function waveOutToEnd(duration) {
+        if (!mainGainNode) return;
+        const startTime = audioContext.currentTime;
+        
+        mainGainNode.gain.cancelScheduledValues(startTime);
+        mainGainNode.gain.setValueAtTime(mainGainNode.gain.value, startTime);
+        
+        // ΠΟΛΥ απαλό fade out - σχεδόν μηδέν
+        mainGainNode.gain.exponentialRampToValueAtTime(0.08, startTime + duration * 0.3);
+        mainGainNode.gain.exponentialRampToValueAtTime(0.02, startTime + duration * 0.55);
+        mainGainNode.gain.exponentialRampToValueAtTime(0.005, startTime + duration * 0.8);
+        mainGainNode.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+        
+        // LFO σχεδόν σταματάει - ελάχιστα κύματα
+        if (oscillatorLFO) {
+            oscillatorLFO.frequency.cancelScheduledValues(startTime);
+            oscillatorLFO.frequency.setValueAtTime(oscillatorLFO.frequency.value, startTime);
+            oscillatorLFO.frequency.linearRampToValueAtTime(0.08, startTime + duration * 0.7); // Πολύ πολύ αργά
+        }
+        
+        // Φίλτρο κλείνει στο ελάχιστο
+        if (filterNode) {
+            filterNode.frequency.cancelScheduledValues(startTime);
+            filterNode.frequency.setValueAtTime(filterNode.frequency.value, startTime);
+            filterNode.frequency.exponentialRampToValueAtTime(350, startTime + duration); // Πολύ χαμηλά
+        }
+        
+        // Ελάχιστο Q
+        if (filterNode) {
+            filterNode.Q.cancelScheduledValues(startTime);
+            filterNode.Q.setValueAtTime(filterNode.Q.value, startTime);
+            filterNode.Q.linearRampToValueAtTime(0.2, startTime + duration);
+        }
+        
+        // Ελάχιστο βάθος LFO
+        if (lfoGainNode) {
+            lfoGainNode.gain.cancelScheduledValues(startTime);
+            lfoGainNode.gain.setValueAtTime(lfoGainNode.gain.value, startTime);
+            lfoGainNode.gain.linearRampToValueAtTime(0.01, startTime + duration);
+        }
+    }
+
+    // Για το stop button
+    function fadeOut(duration) {
+        if (!mainGainNode) return;
+        const startTime = audioContext.currentTime;
+        
+        mainGainNode.gain.cancelScheduledValues(startTime);
+        mainGainNode.gain.setValueAtTime(mainGainNode.gain.value, startTime);
+        mainGainNode.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+        mainGainNode.gain.linearRampToValueAtTime(0, startTime + duration + 0.1);
+    }
+
+    function startBreathing() {
+        const inhale = parseInt(document.getElementById('inhale').value);
+        const hold1 = parseInt(document.getElementById('hold1').value);
+        const exhale = parseInt(document.getElementById('exhale').value);
+        const hold2 = parseInt(document.getElementById('hold2').value);
+
+        if (inhale < 1 || exhale < 1) {
+            alert('Η εισπνοή και η εκπνοή πρέπει να είναι τουλάχιστον 1 δευτερόλεπτο');
+            return;
+        }
+
+        document.getElementById('settings').style.display = 'none';
+        document.getElementById('breathingCircle').style.display = 'block';
+        
+        if (!pinkNoiseNode) {
+            const nodes = createPinkNoise();
+            pinkNoiseNode = nodes.noise;
+        }
+
+        isPlaying = true;
+        currentPhase = 0;
+        cycleCount = 1;
+        
+        runBreathingCycle(inhale, hold1, exhale, hold2);
+    }
+
+    function runBreathingCycle(inhale, hold1, exhale, hold2) {
+        if (!isPlaying) return;
+
+        const circle = document.getElementById('circle');
+        const phaseText = document.getElementById('phaseText');
+        const timerText = document.getElementById('timerText');
+        const cycleCounter = document.getElementById('cycleCounter');
+
+        const phases = [
+            { name: '🌬️ Εισπνοή', duration: inhale, type: 'inhale' },
+            { name: '⏸️ Κράτημα', duration: hold1, type: 'hold1' },
+            { name: '💨 Εκπνοή', duration: exhale, type: 'exhale' },
+            { name: '⏸️ Κράτημα', duration: hold2, type: 'hold2' }
+        ];
+
+        function runPhase(phaseIndex) {
+            if (!isPlaying || phaseIndex >= phases.length) {
+                if (isPlaying) {
+                    cycleCount++;
+                    cycleCounter.textContent = `Κύκλος: ${cycleCount}`;
+                    runBreathingCycle(inhale, hold1, exhale, hold2);
+                }
+                return;
+            }
+
+            const phase = phases[phaseIndex];
+            
+            if (phase.duration === 0) {
+                runPhase(phaseIndex + 1);
+                return;
+            }
+
+            phaseText.textContent = phase.name;
+            let timeLeft = phase.duration;
+            timerText.textContent = timeLeft;
+
+            // Ήχος και animation με τη νέα λογική κυμάτων
+            if (phase.type === 'inhale') {
+                // ΕΙΣΠΝΟΗ: Το κύμα έρχεται (fade in)
+                waveIn(phase.duration);
+                
+                circle.style.transition = `transform ${phase.duration}s cubic-bezier(0.4, 0.0, 0.2, 1)`;
+                circle.style.transform = 'scale(1.6)';
+                circle.style.boxShadow = '0 0 80px rgba(100,200,255,0.6), 0 0 120px rgba(150,220,255,0.4)';
+                
+            } else if (phase.type === 'hold1') {
+                // ΠΑΥΣΗ ΜΕΤΑ ΕΙΣΠΝΟΗ: Το κύμα φεύγει (fade out)
+                waveOutToHold(phase.duration);
+                
+                circle.style.transition = `all 0.5s ease-out`;
+                circle.style.boxShadow = '0 0 60px rgba(120,180,255,0.5), 0 0 100px rgba(140,200,255,0.3)';
+                
+            } else if (phase.type === 'exhale') {
+                // ΕΚΠΝΟΗ: Το κύμα έρχεται πάλι (fade in)
+                waveInExhale(phase.duration);
+                
+                circle.style.transition = `transform ${phase.duration}s cubic-bezier(0.4, 0.0, 0.2, 1)`;
+                circle.style.transform = 'scale(0.7)';
+                circle.style.boxShadow = '0 0 50px rgba(180,150,255,0.5), 0 0 90px rgba(200,170,255,0.3)';
+                
+            } else if (phase.type === 'hold2') {
+                // ΠΑΥΣΗ ΜΕΤΑ ΕΚΠΝΟΗ: Το κύμα φεύγει στη σιωπή (fade out)
+                waveOutToEnd(phase.duration);
+                
+                circle.style.transition = `all 0.5s ease-out`;
+                circle.style.boxShadow = '0 0 40px rgba(200,180,255,0.4), 0 0 70px rgba(180,160,255,0.2)';
+            }
+
+            // Χρονόμετρο
+            const countdown = setInterval(() => {
+                timeLeft--;
+                timerText.textContent = timeLeft;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(countdown);
+                    runPhase(phaseIndex + 1);
+                }
+            }, 1000);
+        }
+
+        runPhase(0);
+    }
+
+    function stopBreathing() {
+        isPlaying = false;
+        
+        if (mainGainNode) {
+            fadeOut(1.5);
+        }
+
+        setTimeout(() => {
+            document.getElementById('settings').style.display = 'block';
+            document.getElementById('breathingCircle').style.display = 'none';
+            
+            const circle = document.getElementById('circle');
+            circle.style.transform = 'scale(1)';
+            circle.style.boxShadow = '0 0 50px rgba(255,255,255,0.3)';
+            
+            cycleCount = 1;
+        }, 1500);
+    }
+</script>
+```
+
 </body>
 </html>
